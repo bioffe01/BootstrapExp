@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/docs.min.css"/>
+    <link rel="stylesheet" href="css/wf.css"/>
+    <title>Workflow POC</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(function () {
+
+                Highcharts.wrap(Highcharts.seriesTypes.heatmap.prototype, 'translate', function (proceed) {
+                    proceed.apply(this, [].slice.call(arguments, 0));
+
+                    Highcharts.each(this.points, function (point) {
+                    //     // Adapt here the size and position of each cell
+                    //     point.shapeArgs.height = 40;
+                        point.shapeArgs.width = 40;
+                    //     point.shapeArgs.y += point.shapeArgs.height / 3;
+                    //
+                       //   point.shapeArgs.x +=  ;
+                    });
+                });
+
+                $('#container').highcharts({
+
+                    chart: {
+                        type: 'heatmap',
+                        marginTop: 0,
+                        marginBottom: 0,
+                        borderWidth: 1,
+                    },
+
+
+                    title: {
+                        text: null,
+                    },
+
+                    xAxis: {
+                        // These two options force the xAxis to show all categories
+                        min:0,
+                        minRange: 9, // probably you can set the categories in a seperate var and then call [].length ?
+                        visible: false,
+                    },
+
+                    yAxis: {
+                        visible: false,
+                    },
+
+                    colorAxis: {
+                        min: 0,
+                        minColor: '#FFFFFF',
+                        maxColor: Highcharts.getOptions().colors[0]
+                    },
+
+                    legend: {
+                        align: 'right',
+                        layout: 'vertical',
+                        margin: 0,
+                        verticalAlign: 'top',
+                        y: 25,
+                        symbolHeight: 320,
+                        enabled: false,
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return '<b>' + this.series.xAxis.categories[this.point.x] + '</b> sold <br><b>' + this.point.value + '</b> items on <br><b>' + this.series.yAxis.categories[this.point.y] + '</b>';
+                        }
+                    },
+                    exporting: { enabled: false },
+                    series: [{
+                        borderWidth: 1,
+                        data: [
+                            [1, 0, 92],
+                            [2, 0, 58],
+                            [3, 0, 78],
+                            [4, 0, 117],
+                        ],
+                        dataLabels: {
+                            enabled: true,
+                            color: 'black',
+                            style: {
+                                textShadow: 'none',
+                                HcTextStroke: null
+                            }
+                        }
+                    }]
+
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="bd-example-row">
+    <div class="bd-example">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="column">
+                        <div class="mb-3">
+                            <button class="btn btn-bd-primary">Code Download</button>
+                        </div>
+                        <div class="mb-3">
+
+                            <input id="githubUrl" class="form-control" placeholder="@GitHub URL" type="text"/>
+                        </div>
+                        <div class="mb-3">
+                            <div id="sourceCode">
+                                <textarea id="src-input" class="form-control"> </textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="mb-3">
+                        <button class="btn btn-bd-primary">Build</button>
+                    </div>
+                    <div class="mb-3">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <hr class="mb-4">
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input id="save-nexus" class="custom-control-input" type="checkbox"/>
+                        <label class="custom-control-label" for="save-nexus">Save build artifacts to Nexus</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input id="save-dtr" class="custom-control-input" type="checkbox"/>
+                        <label class="custom-control-label" for="save-dtr">Save build artifacts to DTR</label>
+                    </div>
+                    <div class="mb-3">
+                        <hr class="mb-4">
+                    </div>
+
+                </div>
+                <div class="col-sm">
+                    <div class="mb-3">
+                        <button class="btn btn-bd-primary">Deploy</button>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="DataCenter" id="rbcDataCenter" value="rbc" checked>
+                            <label class="form-check-label" for="rbcDataCenter">
+                                RBC Datacenter
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="DataCenter" id="cloudDataCenter" value="cloud">
+                            <label class="form-check-label" for="cloudDataCenter">
+                                Cloud
+                            </label>
+                        </div>
+                        <div class="form-check disabled">
+                            <input class="form-check-input" type="radio" name="DataCenter" id="hybridDdataCenter" value="hybrid" disabled>
+                            <label class="form-check-label" for="hybridDdataCenter">
+                                Hybrid
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">RBC UCP</h5>
+                                <div id="container" style="height: 150px;">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Optional JavaScript -->
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/heatmap.js"></script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+<!--<script src="htt  ps://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+</body>
+</html>
